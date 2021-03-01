@@ -5,8 +5,6 @@ const http = require("http"),
 http.createServer((request, response) => {
     let addr = request.url;
     q = url.parse(addr, true);
-    /* q = new URL(addr); */
-    console.log(q);
     let filePath = "";
 
     fs.appendFile("log.txt", `URL: ${addr} ${new Date()}\n\n`, (err) => {
