@@ -1,11 +1,11 @@
 const http = require("http"),
-    url = require("url"),
     fs = require("fs");
 
 http.createServer((request, response) => {
     let addr = request.url;
-    q = url.parse(addr, true);
+    let q = new URL(addr, "http://localhost:8080");
     let filePath = "";
+    console.log(q);
 
     fs.appendFile("log.txt", `URL: ${addr} ${new Date()}\n\n`, (err) => {
         if (err) {
@@ -18,7 +18,7 @@ http.createServer((request, response) => {
     if (q.pathname.includes("documentation")) {
         filePath = __dirname + "/documentation.html"
     } else {
-        filePath = "index.html";
+        filePath = "./index.html";
     };
 
     fs.readFile(filePath, (err, data) => {
