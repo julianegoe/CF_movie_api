@@ -102,11 +102,6 @@ app.get("/movies", (req, res) => {
     res.json(movies)
 });
 
-/* app.get("/documentation", (req, res) => {
-    console.log("Inside the doc handler");
-    res.send("This is the documentation");
-}); */
-
 app.listen(8080, () => {
     console.log("Your app is listening on port 8080.");
 });
