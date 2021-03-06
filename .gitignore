@@ -2,4 +2,3 @@
 stylelint.config.js
 .vscode/
 node_modules
-package-lock.json
