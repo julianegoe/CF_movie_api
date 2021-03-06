@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const bodyParser = require("body-parser")
 
 let movieList = {
     results : [
@@ -110,6 +111,7 @@ let requestTime = (req, res, next) => {
 // Execute Middleware functions
 app.use(morgan("common"));
 app.use(requestTime);
+app.use(bodyParser.json());
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something wen wrong!');
@@ -134,38 +136,38 @@ app.get("/movies/:title", (req, res) => {
     }));
 });
 
-app.get("/genres/:Name", (req, res) => {
+app.get("/genres/:name", (req, res) => {
     res.send("JSON object of data for genre of sepecified name")
 });
 
-app.get("/directors/:Name", (req, res) => {
+app.get("/directors/:name", (req, res) => {
     let reqDirector = req.params.Name;
     res.send(`JSON object of data for ${reqDirector}`)
 })
 
 app.post("/users", (req, res) => {
     let newUser = req.body;
-    res.send("You're successfully regitered.")
+    res.status(201).send(newUser)
 })
 
-app.put("/users/:Username", (req, res) => {
-    let newUsername = req.params.Username
-    res.send("Your username has been successfully updated.")
+app.put("/users/:username", (req, res) => {
+    let newUsername = req.params.username
+    res.send(`Your username ${newUsername} has been successfully updated.`)
 })
 
-app.put("/favorits/:Title", (req, res) => {
-    let newFavorite = req.params.Title
-    res.send("Your movies has been successfully added to your favorites.")
+app.put("/favorites/:title", (req, res) => {
+    let newFavorite = req.params.title
+    res.send(`${newFavorite} has been successfully added to your favorites.`)
 })
 
-app.delete("/favorits/:Title", (req, res) => {
-    let newFavorite = req.params.Title
-    res.send("Your movies has been successfully deleted from your favorites.")
+app.delete("/favorites/:title", (req, res) => {
+    let favorite = req.params.title
+    res.send(`${favorite} has been successfully deleted from your favorites.`)
 })
 
-app.delete("/users/:Username", (req, res) => {
-    let newFavorite = req.params.Username
-    res.send("Your account has successfully been deleted")
+app.delete("/users/:username", (req, res) => {
+    let username = req.params.username
+    res.send(`Your account ${username} has successfully been deleted`)
 })
 
 
