@@ -2,6 +2,30 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 
+let movieList = {
+    results : [
+    { name : "Lost in Translation",
+      endpoint : "/movies/Lost%20In%20Translation",
+      images : "img/lostintranslation.png"
+    },
+
+    { name : "The Martian",
+      endpoint : "/movies/The%20Martian",
+      images : "img/themartian.png"
+    },
+
+    { name : "Inside Llewyn Davis",
+      endpoint : "/movies/Inside%Llewyn%Davis",
+      images : "img/insidellewyindavis.png"
+    },
+
+    { name : "Django Unchained",
+      endpoint : "/movies/Django%Unchained",
+      images : "img/djangounchained.png"
+    }
+      ]
+}
+
 let movies = [{
     name : "Lost in Translation",
     director : ["Sofia Coppola"],
@@ -59,7 +83,7 @@ let movies = [{
     genre : ["Drama", "Comedy"],
 },
 {
-    name : "Lord of the Rings: The Fellowship of the Rings",
+    name : "Lord of the Rings",
     director : "Peter Jackson",
     year : 2001,
     cast : ["Elijah Wood", "Viggo Mortensen", "Sean Astin", "Orlando Bllom", "Ian McKellen", "Liv Tyler", "Christopher Lee"],
@@ -99,8 +123,51 @@ app.get("/", (req, res) => {
 });
 
 app.get("/movies", (req, res) => {
-    res.json(movies)
+    res.json(movieList)
 });
+
+app.get("/movies/:title", (req, res) => {
+    let reqMovie = req.params.title;
+    console.log(reqMovie);
+    res.json(movies.find((object) => {
+        return object.name === reqMovie
+    }));
+});
+
+app.get("/genres/:Name", (req, res) => {
+    res.send("JSON object of data for genre of sepecified name")
+});
+
+app.get("/directors/:Name", (req, res) => {
+    let reqDirector = req.params.Name;
+    res.send(`JSON object of data for ${reqDirector}`)
+})
+
+app.post("/users", (req, res) => {
+    let newUser = req.body;
+    res.send("You're successfully regitered.")
+})
+
+app.put("/users/:Username", (req, res) => {
+    let newUsername = req.params.Username
+    res.send("Your username has been successfully updated.")
+})
+
+app.put("/favorits/:Title", (req, res) => {
+    let newFavorite = req.params.Title
+    res.send("Your movies has been successfully added to your favorites.")
+})
+
+app.delete("/favorits/:Title", (req, res) => {
+    let newFavorite = req.params.Title
+    res.send("Your movies has been successfully deleted from your favorites.")
+})
+
+app.delete("/users/:Username", (req, res) => {
+    let newFavorite = req.params.Username
+    res.send("Your account has successfully been deleted")
+})
+
 
 app.listen(8080, () => {
     console.log("Your app is listening on port 8080.");
