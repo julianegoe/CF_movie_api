@@ -10,6 +10,211 @@
     <h1>Documentation</h1>
     <p>The myFlix API is a REST API. It can be accessed via HTTP methods like GET and POST.
         MyFlix Api has information on movies, directors, and genres</p>
+    <table border="1" style="border-collapse:collapse;">
+        <thead>
+            <tr>
+                <th scope="col">Business Logic</th>
+                <th scope="col">URL</th>
+                <th scope="col">HTTP Methods</th>
+                <th scope="col">Request Body data format</th>
+                <th scope="col">Response Body data format</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding: 5px;">Return a list of ALL movies to the user </td>
+                <td style="padding: 5px;">/movies </td>
+                <td style="padding: 5px;">GET</td>
+                <td style="padding: 5px;">None</td>
+                <td style="padding: 5px;">A JSON object containing name and image of every movie in the database</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;">Return movie data by movie title</td>
+                <td style="padding: 5px;">/movies/[Title] </td>
+                <td style="padding: 5px;">GET</td>
+                <td style="padding: 5px;">None</td>
+                <td style="padding: 5px;">A JSON object containing details of one specific movie</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;">Return data about a genres by genre title</td>
+                <td style="padding: 5px;">/genres/[Title]</td>
+                <td style="padding: 5px;">GET</td>
+                <td style="padding: 5px;">None</td>
+                <td style="padding: 5px;">A JSON object containing a description of a specific genre</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;">Return data about a director by name</td>
+                <td style="padding: 5px;">/directors/[Name]</td>
+                <td style="padding: 5px;">GET</td>
+                <td style="padding: 5px;">None</td>
+                <td style="padding: 5px;">A JSON object containing biographical details of one specific director</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;">Allow new users to register </td>
+                <td style="padding: 5px;">/users</td>
+                <td style="padding: 5px;">POST</td>
+                <td style="padding: 5px;">A JSON object containing user data</td>
+                <td style="padding: 5px;">A Text message indicating that the registration process was successful</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;">Allow users to update their username</td>
+                <td style="padding: 5px;">/users/[Name]</td>
+                <td style="padding: 5px;">PUT</td>
+                <td style="padding: 5px;">None</td>
+                <td style="padding: 5px;">A Text message indicating that the update was successful</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;">Allow users to add a movie to their list of favorites</td>
+                <td style="padding: 5px;">/favorites/[Title]</td>
+                <td style="padding: 5px;">PUT</td>
+                <td style="padding: 5px;">None</td>
+                <td style="padding: 5px;">A Text message indicating that the update was successful</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;">Allow users to remove a movie from their list of favorites</td>
+                <td style="padding: 5px;">/favorites/[Title]</td>
+                <td style="padding: 5px;">DELETE</td>
+                <td style="padding: 5px;">None</td>
+                <td style="padding: 5px;">A Text message indicating that the deletion was successful</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;">Allow existing users to deregister</td>
+                <td style="padding: 5px;">/users/[Name]</td>
+                <td style="padding: 5px;">DELETE</td>
+                <td style="padding: 5px;">None</td>
+                <td style="padding: 5px;">A Text message indicating that the deletion was successful</td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>Request and Response data</h2>
+    <h3>Movies - Return ALL movies</h3>
+    <p><span>GET </span>/movies</p>
+    <p><strong>Example response:</strong></p>
+    <pre>
+        {
+            "results" : [
+            { "name" : "Lost in Translation",
+              "endpoint" : "/movies/Lost%20In%20Translation"},
+              "images" : "img/lostintranslation.png"
+
+            { "name" : "The Martian",
+              "endpoint" : "/movies/The%20Martian"},
+              "images" : "img/themartian.png"
+
+            { "name" : "Inside Llewyn Davis",
+              "endpoint" : "/movies/Inside%Llewyn%Davis"},
+              "images" : "img/insidellewyindavis.png"
+
+            { "name" : "Django Unchained",
+              "endpoint" : "/movies/Django%Unchained"},
+              "images" : "img/djangounchained.png"
+              
+              ]
+        }
+    </pre>
+    <h3>Movies - Return details on one movie by name</h3>
+    <p><span>GET </span>/movies/Lost%20In%20Translation</p>
+    <p><strong>Example response:</strong></p>
+    <pre>
+        {
+            "names" : "Lost in Translation",
+            "directors" : [{
+               "name" : "Sofia Coppola",
+               "endpoint" : "/directors/Sofia%20Coppola"}],
+            "years" : 2003,
+            "cast" : [
+               "Bill Murray",
+               "Scarlett Johannson",
+               "Giovanni Ribisi",
+               "Anna Faris"
+            ],
+            "genres" : {
+               "info" : [
+                  {
+                     "name":"Comedy",
+                     "endpoint" : "/genres/Comedy"
+                  },
+                  {
+                     "name":"Romance",
+                     "endpoint" : "/genres/Romance"
+                  },
+                  {
+                     "name":"Drama",
+                     "endpoint" : "/genres/Drama"
+                  }
+               ]
+            },
+            "images" : "img/lostintranslation.png"
+         }
+    </pre>
+
+    <h3>Genres - Return info on one genre by name</h3>
+    <p><span>GET </span>/genres/Comedy</p>
+    <p><strong>Example response:</strong></p>
+    <pre>
+        {"genre":[
+               {
+                  "name":"Comedy",
+                  "description":"A comedy film is a category of film in which the main emphasis is on humor."
+               }
+        }
+    </pre>
+
+    <h3>Directors - Return information on one director by name</h3>
+    <p><span>GET </span>/directors/Sofia%20Coppola</p>
+    <p><strong>Example response:</strong></p>
+    <pre>
+        {
+            "directors" : {
+                "name" : "Sofia Coppola",
+                "birth":1971,
+                "death":"",
+                "bio":"Sofia Coppola is a director, known for Somewhere (2010),Lost in Translation (2003), and Marie Antoinette
+                (2006).She has been married to Thomas Mars since August 27, 2011.They have two daughters, Romy and Cosima"
+            
+            }
+        }
+
+    </pre>
+    <h3>USers - Allow user to register</h3>
+    <p><span>POST </span>/users</p>
+    <p><strong>Example request:</strong></p>
+    <pre>
+        {
+            "username" : "defenderNo1",
+            "name" : "Jessica Jones",
+            "eMail" : "jessica-jones@domain.com"
+            "password" : "########"
+        }
+    </pre>
+    <p><strong>Example response:</strong></p>
+    <pre>
+        You're successfully regitered.'
+    </pre>
+    <h3>Users - Allow user to update username</h3>
+    <p><span>PUT </span>/users/marvelheroNo1</p>
+    <p><strong>Example response:</strong></p>
+    <pre>
+        Your username has successfully been updated.
+    </pre>
+    <h3>Users - Allow user to delete account</h3>
+    <p><span>DELETE </span>/users/defenderNo1</p>
+    <p><strong>Example response:</strong></p>
+    <pre>
+        Your username has successfully been deleted.
+    </pre>
+    <h3>Favorites - Allow user to add movies to favorites list</h3>
+    <p><span>PUT </span>/favorites/Young%20Adult</p>
+    <p><strong>Example response:</strong></p>
+    <pre>
+        Your movie has successfully been added to favorites.
+    </pre>
+    <h3>Favorites - Allow user to delete movies from favorites list</h3>
+    <p><span>DELETE </span>/favorites/Young%20Adult</p>
+    <p><strong>Example response:</strong></p>
+    <pre>
+        Your movie has successfully been deleted from favorites.
+    </pre>
 
 </body>
 
