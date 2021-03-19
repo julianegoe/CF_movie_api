@@ -9,7 +9,7 @@
 
     <h1>Documentation</h1>
     <p>The myFlix API is a REST API. It can be accessed via HTTP methods like GET and POST.
-        MyFlix Api has information on movies, directors, and genres</p>
+        MyFlix Api has information on movies, directors, and genres.</p>
     <table border="1" style="border-collapse:collapse;">
         <thead>
             <tr>
@@ -92,87 +92,81 @@
     <p><strong>Example response:</strong></p>
     <pre>
         {
-            "results" : [
-            { "name" : "Lost in Translation",
-              "endpoint" : "/movies/Lost%20In%20Translation"},
-              "images" : "img/lostintranslation.png"
-
-            { "name" : "The Martian",
-              "endpoint" : "/movies/The%20Martian"},
-              "images" : "img/themartian.png"
-
-            { "name" : "Inside Llewyn Davis",
-              "endpoint" : "/movies/Inside%Llewyn%Davis"},
-              "images" : "img/insidellewyindavis.png"
-
-            { "name" : "Django Unchained",
-              "endpoint" : "/movies/Django%Unchained"},
-              "images" : "img/djangounchained.png"
-              
-              ]
-        }
+            "Title" : "Interstellar",
+            "Description" : "Interstellar chronicles the adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.",
+            "Director" : {
+               "Name" : "Chriostopher Nolan",
+               "Bio" : "Christopher Edward Nolan is a British-American film director, screenwriter, and producer. He was born in Westminster, London, England and holds both British and American citizenship due to his American mother. He is known for writing and directing critically acclaimed films such as Memento (2000), The Prestige (2006),",
+               "Birth" : new Date("1970-07-30")
+            },
+            "Year" : 2014,
+            "Genre" : {
+               "Name" : "Sci-Fi",
+               "Description" : "Science fiction (or sci-fi) is a film genre that uses speculative, fictional science-based depictions of phenomena that are not fully accepted by mainstream science, such as extraterrestrial lifeforms, alien worlds, extrasensory perception and time travel, along with futuristic elements such as spacecraft, robots, cyborgs, interstellar travel or other technologies."
+            },
+            "ImageUrl" : "interstellar.png",
+            "Featured" : true
+         }
+         {
+            "Title" : "Django Unchained",
+            "Description" : "With the help of a German bounty hunter, a freed slave sets out to rescue his wife from a brutal Mississippi plantation owner.",
+            "Director" : {
+               "Name" : "Quentin Tarantino",
+               "Bio" : "Quentin Jerome Tarantino is an American film director, screenwriter, producer, cinematographer and actor. In the early 1990s he was an independent filmmaker whose films used nonlinear storylines and aestheticization of violence.",
+               "Birth" : new Date("1963-03-27")
+            },
+            "Year" : 2012,
+            "Genre" : {
+               "Name" : "Western",
+               "Description" : "Western is a genre of fiction set primarily in the latter half of the 19th and early 20th century in the Western United States, which is styled the 'Old West'. Its stories commonly center on the life of a nomadic cowboy or gunfighter[1] armed with a revolver and a rifle who rides a horse."
+            },
+            "ImageUrl" : "djangounchained.png",
+            "Featured" : true
+         }
     </pre>
     <h3>Movies - Return details on one movie by name</h3>
-    <p><span>GET </span>/movies/Lost%20In%20Translation</p>
+    <p><span>GET </span>/movies/Inside%20Llewyn%Davis</p>
     <p><strong>Example response:</strong></p>
     <pre>
         {
-            "names" : "Lost in Translation",
-            "directors" : [{
-               "name" : "Sofia Coppola",
-               "endpoint" : "/directors/Sofia%20Coppola"}],
-            "years" : 2003,
-            "cast" : [
-               "Bill Murray",
-               "Scarlett Johannson",
-               "Giovanni Ribisi",
-               "Anna Faris"
-            ],
-            "genres" : {
-               "info" : [
-                  {
-                     "name":"Comedy",
-                     "endpoint" : "/genres/Comedy"
-                  },
-                  {
-                     "name":"Romance",
-                     "endpoint" : "/genres/Romance"
-                  },
-                  {
-                     "name":"Drama",
-                     "endpoint" : "/genres/Drama"
-                  }
-               ]
+            "Title" : "Inside Llewyn Davis",
+            "Description" : "In Greenwich Village in the early 1960s, gifted but volatile folk musician Llewyn Davis struggles with money, relationships, and his uncertain future following the suicide of his singing partner.",
+            "Director" : {
+               "Name" : "Ethan Coen",
+               "Bio" : "American filmmaker Ethan Jesse Coen is known for writing, directing and producing films jointly with his brother Joel David Coen, professionally they are known as the Coen brothers.",
+               "Birth" : new Date("1957-09-21")
             },
-            "images" : "img/lostintranslation.png"
-         }
+            "Year" : 2013,
+            "Genre" : {
+               "Name" : "Drama",
+               "Description" : "In film and television, drama is a category of narrative fiction (or semi-fiction) intended to be more serious than humorous in tone"
+            },
+            "ImageUrl" : "insidellewyndavid.png",
+            "Featured" : true
+         };
     </pre>
 
     <h3>Genres - Return info on one genre by name</h3>
     <p><span>GET </span>/genres/Comedy</p>
     <p><strong>Example response:</strong></p>
-    <pre>
-        {"genre":[
-               {
-                  "name":"Comedy",
-                  "description":"A comedy film is a category of film in which the main emphasis is on humor."
-               }
-        }
+
+    {
+    "Name":"Comedy",
+    "Description":"A comedy film is a category of film in which the main emphasis is on humor."
+    }
+    }
     </pre>
 
     <h3>Directors - Return information on one director by name</h3>
-    <p><span>GET </span>/directors/Sofia%20Coppola</p>
+    <p><span>GET </span>/directors/Ethan%Coen</p>
     <p><strong>Example response:</strong></p>
     <pre>
         {
-            "directors" : {
-                "name" : "Sofia Coppola",
-                "birth":1971,
-                "death":"",
-                "bio":"Sofia Coppola is a director, known for Somewhere (2010),Lost in Translation (2003), and Marie Antoinette
-                (2006).She has been married to Thomas Mars since August 27, 2011.They have two daughters, Romy and Cosima"
-            
-            }
+            "Director" : {
+            "Name" : "Ethan Coen",
+            "Bio" : "American filmmaker Ethan Jesse Coen is known for writing, directing and producing films jointly with his brother Joel David Coen, professionally they are known as the Coen brothers.",
+            "Birth" : new Date("1957-09-21")
+         }
         }
 
     </pre>
@@ -181,11 +175,13 @@
     <p><strong>Example request:</strong></p>
     <pre>
         {
-            "username" : "defenderNo1",
-            "name" : "Jessica Jones",
-            "eMail" : "jessica-jones@domain.com"
-            "password" : "########"
-        }
+            "Name": "Walter White",
+            "Username": "Heisenberg",
+            "Email": "heisenberg@example.com",
+            "Password": "ImTheOneWhoKnocks",
+            "Birthday": new Date("1956-7-25"),
+            "FavoriteMovies": [ObjectId("604fc464627315601b070a66"), ObjectId("604fc477627315601b070a67")]
+         }
     </pre>
     <p><strong>Example response:</strong></p>
     <pre>
