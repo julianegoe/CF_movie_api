@@ -54,25 +54,25 @@
                 <td style="padding: 5px;">/users</td>
                 <td style="padding: 5px;">POST</td>
                 <td style="padding: 5px;">A JSON object containing user data</td>
-                <td style="padding: 5px;">A Text message indicating that the registration process was successful</td>
+                <td style="padding: 5px;">A JSON object containing user data</td>
             </tr>
             <tr>
-                <td style="padding: 5px;">Allow users to update their username</td>
+                <td style="padding: 5px;">Allow users to update user info</td>
                 <td style="padding: 5px;">/users/[Name]</td>
                 <td style="padding: 5px;">PUT</td>
-                <td style="padding: 5px;">None</td>
-                <td style="padding: 5px;">A Text message indicating that the update was successful</td>
+                <td style="padding: 5px;">A JSON object containing "Username", "Password", "Email", "Birthday"</td>
+                <td style="padding: 5px;">A JSON object containing date of one user</td>
             </tr>
             <tr>
                 <td style="padding: 5px;">Allow users to add a movie to their list of favorites</td>
-                <td style="padding: 5px;">/favorites/[Title]</td>
+                <td style="padding: 5px;">/users/[username]/movies/[movieId]</td>
                 <td style="padding: 5px;">PUT</td>
                 <td style="padding: 5px;">None</td>
-                <td style="padding: 5px;">A Text message indicating that the update was successful</td>
+                <td style="padding: 5px;">A JSON object containing user data including updated movieId</td>
             </tr>
             <tr>
                 <td style="padding: 5px;">Allow users to remove a movie from their list of favorites</td>
-                <td style="padding: 5px;">/favorites/[Title]</td>
+                <td style="padding: 5px;">/users/[username]/movies/[movieId]</td>
                 <td style="padding: 5px;">DELETE</td>
                 <td style="padding: 5px;">None</td>
                 <td style="padding: 5px;">A Text message indicating that the deletion was successful</td>
@@ -84,6 +84,13 @@
                 <td style="padding: 5px;">None</td>
                 <td style="padding: 5px;">A Text message indicating that the deletion was successful</td>
             </tr>
+            <tr>
+                <td style="padding: 5px;">Return a list of ALL users to the user</td>
+                <td style="padding: 5px;">/users</td>
+                <td style="padding: 5px;">GET</td>
+                <td style="padding: 5px;">None</td>
+                <td style="padding: 5px;">A JSON object containing date of all users</td>
+            </tr>
         </tbody>
     </table>
     <h2>Request and Response data</h2>
@@ -91,13 +98,13 @@
     <p><span>GET </span>/movies</p>
     <p><strong>Example response:</strong></p>
     <pre>
-        {
+        [{
             "Title" : "Interstellar",
             "Description" : "Interstellar chronicles the adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.",
             "Director" : {
                "Name" : "Chriostopher Nolan",
                "Bio" : "Christopher Edward Nolan is a British-American film director, screenwriter, and producer. He was born in Westminster, London, England and holds both British and American citizenship due to his American mother. He is known for writing and directing critically acclaimed films such as Memento (2000), The Prestige (2006),",
-               "Birth" : new Date("1970-07-30")
+               "Birth" : "1970-07-30T00:00:00.000Z"
             },
             "Year" : 2014,
             "Genre" : {
@@ -106,14 +113,14 @@
             },
             "ImageUrl" : "interstellar.png",
             "Featured" : true
-         }
+         },
          {
             "Title" : "Django Unchained",
             "Description" : "With the help of a German bounty hunter, a freed slave sets out to rescue his wife from a brutal Mississippi plantation owner.",
             "Director" : {
                "Name" : "Quentin Tarantino",
                "Bio" : "Quentin Jerome Tarantino is an American film director, screenwriter, producer, cinematographer and actor. In the early 1990s he was an independent filmmaker whose films used nonlinear storylines and aestheticization of violence.",
-               "Birth" : new Date("1963-03-27")
+               "Birth" : "1963-03-27T00:00:00.000Z"
             },
             "Year" : 2012,
             "Genre" : {
@@ -122,53 +129,53 @@
             },
             "ImageUrl" : "djangounchained.png",
             "Featured" : true
-         }
+         }]
     </pre>
     <h3>Movies - Return details on one movie by name</h3>
     <p><span>GET </span>/movies/Inside%20Llewyn%Davis</p>
     <p><strong>Example response:</strong></p>
     <pre>
-        {
-            "Title" : "Inside Llewyn Davis",
-            "Description" : "In Greenwich Village in the early 1960s, gifted but volatile folk musician Llewyn Davis struggles with money, relationships, and his uncertain future following the suicide of his singing partner.",
-            "Director" : {
-               "Name" : "Ethan Coen",
-               "Bio" : "American filmmaker Ethan Jesse Coen is known for writing, directing and producing films jointly with his brother Joel David Coen, professionally they are known as the Coen brothers.",
-               "Birth" : new Date("1957-09-21")
-            },
-            "Year" : 2013,
-            "Genre" : {
-               "Name" : "Drama",
-               "Description" : "In film and television, drama is a category of narrative fiction (or semi-fiction) intended to be more serious than humorous in tone"
-            },
-            "ImageUrl" : "insidellewyndavid.png",
-            "Featured" : true
-         };
+[
+    {
+        "Director": {
+            "Name": "Ethan Coen",
+            "Bio": "American filmmaker Ethan Jesse Coen is known for writing, directing and producing films jointly with his brother Joel David Coen, professionally they are known as the Coen brothers. Their films span many genres and styles, which they frequently subvert or parody.",
+            "Birth": "1957-09-21T00:00:00.000Z"
+        },
+        "Genre": {
+            "Name": "Drama",
+            "Description": "In film and television, drama is a category of narrative fiction (or semi-fiction) intended to be more serious than humorous in tone"
+        },
+        "Actors": [],
+        "_id": "604fc464627315601b070a66",
+        "Title": "Inside Llewyn Davis",
+        "Description": "In Greenwich Village in the early 1960s, gifted but volatile folk musician Llewyn Davis struggles with money, relationships, and his uncertain future following the suicide of his singing partner.",
+        "Year": 2013,
+        "ImageUrl": "insidellewyndavid.png",
+        "Featured": true
+    }
+]
     </pre>
 
     <h3>Genres - Return info on one genre by name</h3>
     <p><span>GET </span>/genres/Comedy</p>
     <p><strong>Example response:</strong></p>
-
+    <pre>
     {
-    "Name":"Comedy",
-    "Description":"A comedy film is a category of film in which the main emphasis is on humor."
+        "Name": "Comedy",
+        "Description": "Comedy is a genre of film in which the main emphasis is on humor. These films are designed to make the audience laugh through amusement and most often work by exaggerating characteristics for humorous effect."
     }
-    }
-    </pre>
+</pre>
 
     <h3>Directors - Return information on one director by name</h3>
-    <p><span>GET </span>/directors/Ethan%Coen</p>
+    <p><span>GET </span>/directors/Quentin%Tarantino</p>
     <p><strong>Example response:</strong></p>
     <pre>
         {
-            "Director" : {
-            "Name" : "Ethan Coen",
-            "Bio" : "American filmmaker Ethan Jesse Coen is known for writing, directing and producing films jointly with his brother Joel David Coen, professionally they are known as the Coen brothers.",
-            "Birth" : new Date("1957-09-21")
-         }
+            "Name": "Quentin Tarantino",
+            "Bio": "Quentin Jerome Tarantino is an American film director, screenwriter, producer, cinematographer and actor. In the early 1990s he was an independent filmmaker whose films used nonlinear storylines and aestheticization of violence.",
+            "Birth": "1963-03-27T00:00:00.000Z"
         }
-
     </pre>
     <h3>USers - Allow user to register</h3>
     <p><span>POST </span>/users</p>
@@ -179,37 +186,98 @@
             "Username": "Heisenberg",
             "Email": "heisenberg@example.com",
             "Password": "ImTheOneWhoKnocks",
-            "Birthday": new Date("1956-7-25"),
-            "FavoriteMovies": [ObjectId("604fc464627315601b070a66"), ObjectId("604fc477627315601b070a67")]
+            "Birthday": "1956-7-25"
          }
     </pre>
     <p><strong>Example response:</strong></p>
     <pre>
-        You're successfully regitered.'
+        {
+            "Name": "Walter White",
+            "Username": "Heisenberg",
+            "Email": "heisenberg@example.com",
+            "Password": "ImTheOneWhoKnocks",
+            "Birthday": "1956-7-25T00:00:00.000Z",
+            "FavoriteMovies": []
+         }
     </pre>
-    <h3>Users - Allow user to update username</h3>
-    <p><span>PUT </span>/users/marvelheroNo1</p>
+    <h3>Users - Allow user to update user info</h3>
+    <p><span>PUT </span>/users/TestUser</p>
+    <p><strong>Example request:</strong></p>
+    <pre>
+        {
+            "Username": "TestUser",
+            "Name": "Test User",
+            "Password": "12345",
+            "Email": "test.user@domain.com",
+            Birthday: "1981-08-19"
+        }
+    </pre>
     <p><strong>Example response:</strong></p>
     <pre>
-        Your username has successfully been updated.
+        {
+            "Username": "TestUser",
+            "Name": "Test User",
+            "Password": "12345",
+            "Email": "test.user@domain.com",
+            Birthday: "1981-08-19T00:00:00.000Z"
+        }
     </pre>
     <h3>Users - Allow user to delete account</h3>
     <p><span>DELETE </span>/users/defenderNo1</p>
     <p><strong>Example response:</strong></p>
     <pre>
-        Your username has successfully been deleted.
+        Your user account has successfully been deleted.
     </pre>
     <h3>Favorites - Allow user to add movies to favorites list</h3>
-    <p><span>PUT </span>/favorites/Young%20Adult</p>
+    <p><span>PUT </span>/users/CatLady81/movies/604fc489627315601b070a68</p>
     <p><strong>Example response:</strong></p>
     <pre>
-        Your movie has successfully been added to favorites.
+        {
+            "FavoriteMovies": [
+                "60547bdac4144ee757ec53db",
+                "604fc496627315601b070a69",
+                "604fc489627315601b070a68"
+            ],
+            "_id": "60574da5a4857aa48fc12d30",
+            "Name": "Britta Perry",
+            "Username": "CatLady81",
+            "Password": "MeowMeowMeow1234",
+            "Email": "perry-britta@domain.com",
+            "Birthday": "1981-08-19T00:00:00.000Z"
+        }
     </pre>
     <h3>Favorites - Allow user to delete movies from favorites list</h3>
-    <p><span>DELETE </span>/favorites/Young%20Adult</p>
+    <p><span>DELETE </span>/users/CatLady81/movies/604fc489627315601b070a68</p>
     <p><strong>Example response:</strong></p>
     <pre>
         Your movie has successfully been deleted from favorites.
+    </pre>
+    <h3>Users - Return a list of ALL users to the user</h3>
+    <p><span>GET </span>/users</p>
+    <p><strong>Example response:</strong></p>
+    <pre>
+        [
+    {
+        "FavoriteMovies": [
+            "604fc464627315601b070a66"
+        ],
+        "_id": "604fd334c830939897123c28",
+        "Name": "Clark Kent",
+        "Username": "ImNoSuperman",
+        "Email": "kent.clark@example.com",
+        "Password": "ManofSteel1234",
+        "Birthday": "1990-11-24T00:00:00.000Z"
+    },
+    {
+        "FavoriteMovies": [],
+        "_id": "6054b9fdddd1be739f66a414",
+        "Name": "Jeff Winger",
+        "Username": "Wingman",
+        "Password": "ff45t87hD",
+        "Email": "jeff-winger@greendale.com",
+        "Birthday": "1975-05-04T00:00:00.000Z"
+    }
+    ]
     </pre>
 
 </body>
