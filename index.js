@@ -1,105 +1,16 @@
 const express = require("express");
+const Models = require("./models.js");
 const app = express();
 const morgan = require("morgan");
-const bodyParser = require("body-parser")
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
-let movieList = {
-    results : [
-    { name : "Lost in Translation",
-      endpoint : "/movies/Lost%20In%20Translation",
-      images : "img/lostintranslation.png"
-    },
+const Movies = Models.Movie;
+const Users = Models.User;
 
-    { name : "The Martian",
-      endpoint : "/movies/The%20Martian",
-      images : "img/themartian.png"
-    },
+mongoose.connect("mongodb://localhost:27017/myFlixDB", { useNewUrlParser: true, useUnifiedTopology: true });
 
-    { name : "Inside Llewyn Davis",
-      endpoint : "/movies/Inside%Llewyn%Davis",
-      images : "img/insidellewyindavis.png"
-    },
-
-    { name : "Django Unchained",
-      endpoint : "/movies/Django%Unchained",
-      images : "img/djangounchained.png"
-    }
-      ]
-}
-
-let movies = [{
-    name : "Lost in Translation",
-    director : ["Sofia Coppola"],
-    year : 2003,
-    cast : ["Bill Murray", "Scarlett Johannson", "Giovanni Ribisi", "Anna Faris"],
-    genre : ["Comedy", "Romance", "Drama"],
-},
-{
-    name : "The Martian",
-    director : ["Ridley Scott"],
-    year : 2015,
-    cast : ["Matt Damon", "Jessica Chastain", "Kristen Wiig", "Jeff Daniels", "Michael Peña"],
-    genre : ["Science Fiction", "Drama"],
-},
-{
-    name : "Inside Llewyn Davis",
-    director : ["Ethan Coen", "Joel Coen"],
-    year : 2013,
-    cast : ["Oscar Isaac", "Carey Mulligan", "Johan Doodman", "Garrett Hedlund", "Justin Timberlake", "Adam Driver"],
-    genre : ["Drama"],
-},
-{
-    name : "Django Unchained",
-    director : ["Quentin Tarantino"],
-    year : 2012,
-    cast : ["Jamie Foxx", "Christoph Walz", "Kerry Washingtom", "Leonardo DiCaprio", "Samuel L. Jackson"],
-    genre : ["Western", "Drama"],
-},
-{
-    name : "Interstellar",
-    director : "Christopher Nolan",
-    year : 2014,
-    cast : ["Matthew McConaughey", "Jessica Chastain", "Casey Affleck", "Anne Hathaway", "Matt Damon", "Michael Caine"],
-    genre : ["Science Fiction", "Drama"],
-},
-{
-    name : "Portrait of a Lady on Fire",
-    director : "Céline Sciamma",
-    year : 2019,
-    cast : ["Noémie Merlant", "Adèle Haenel", "Luàna Bajrami", "Valeria Golino"],
-    genre : ["Drama", "Romance"],
-},
-{
-    name : "Office Space",
-    director : "Mike Judge",
-    year : 1999,
-    cast : ["Ron Livingston", "Jennifer Aniston", "David Herman", "Ajay Naidu", "Diedrich Bader", "John C. McGinley"],
-    genre : ["Comedy"],
-},
-{
-    name : "Everything is Illuminated",
-    director : "Liev Schreiber",
-    year : 2005,
-    cast : ["Elijah Wood", "Eugene Hutz", "Boris Leskin", "Jana Hrabětova", "Jonathan Safran Foer"],
-    genre : ["Drama", "Comedy"],
-},
-{
-    name : "Lord of the Rings",
-    director : "Peter Jackson",
-    year : 2001,
-    cast : ["Elijah Wood", "Viggo Mortensen", "Sean Astin", "Orlando Bllom", "Ian McKellen", "Liv Tyler", "Christopher Lee"],
-    genre : ["Fantasy", "Action"],
-},
-{
-    name : "Young Adult",
-    director : "Jason Reitman",
-    year : 2011,
-    cast : ["Charlize Theron", "Pattom Oswalt", "Patrick Wilson", "Elizabeth Reaser"],
-    genre : ["Comedy", "Drama"],
-}]
-
-
-// Declare Middleware functions
+// Declare Middleware function
 let requestTime = (req, res, next) => {
     let timeNow = new Date(Date.now());
     req.requestTime = timeNow.toUTCString();
@@ -110,11 +21,11 @@ let requestTime = (req, res, next) => {
 
 // Execute Middleware functions
 app.use(morgan("common"));
-app.use(requestTime);
+/* app.use(requestTime); */
 app.use(bodyParser.json());
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send('Something wen wrong!');
+    res.status(500).send('Something went wrong!');
   });
 app.use(express.static('public'));
 
@@ -125,50 +36,186 @@ app.get("/", (req, res) => {
 });
 
 app.get("/movies", (req, res) => {
-    res.json(movieList)
-});
+    Movies.find()
+      .then((movies) => {
+        res.status(201).json(movies);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  });
 
 app.get("/movies/:title", (req, res) => {
     let reqMovie = req.params.title;
-    console.log(reqMovie);
-    res.json(movies.find((object) => {
-        return object.name === reqMovie
-    }));
+    Movies.find({Title : reqMovie}).then((movie) => 
+    {
+        res.status(202).json(movie)
+    }).catch((error) => 
+    {
+        console.log(error);
+        res.status(500).send("Error: " + error)
+    })
 });
 
 app.get("/genres/:name", (req, res) => {
-    res.send("JSON object of data for genre of sepecified name")
+    let genre = req.params.name;
+    Movies.findOne({"Genre.Name" : genre}).then((genreName) => 
+    {
+        res.status(202).json(genreName.Genre)
+    }).catch((error) => 
+    {
+        console.log(error);
+        res.status(500).send("Error 500: " + error)
+    })
 });
 
 app.get("/directors/:name", (req, res) => {
-    let reqDirector = req.params.Name;
-    res.send(`JSON object of data for ${reqDirector}`)
-})
+    let director = req.params.name;
+    Movies.findOne({"Director.Name" : director}).then((directorName) => 
+    {
+        res.status(202).json(directorName.Director)
+    }).catch((error) => 
+    {
+        console.log(error);
+        res.status(500).send("Error 500: " + error)
+    })
+});
+
+app.get('/users', (req, res) => {
+    Users.find()
+      .then((users) => {
+        res.status(201).json(users);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  });
+
+  app.get('/users/:username', (req, res) => {
+      let username = req.params.username;
+    Users.findOne({"Username": username})
+      .then((user) => {
+        res.status(201).json(user);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  });
 
 app.post("/users", (req, res) => {
     let newUser = req.body;
-    res.status(201).send(newUser)
-})
+    Users.findOne({"Username" : newUser.Username}).then((user) =>
+    {
+        if (user) {
+            return res.status(400).send(req.body.Username + 'already exists');
+    } else {
+        Users.create(
+            {
+                Name: newUser.Name,
+                Username: newUser.Username,
+                Password: newUser.Password,
+                Email: newUser.Email,
+                Birthday: newUser.Birthday
+            })
+            .then((user) => {
+                res.status(201).json(user)
+            }).catch((error) => {
+                console.error(error);
+                res.status(500).send('Error: ' + error);
+            });
+    }});
+});
 
 app.put("/users/:username", (req, res) => {
-    let newUsername = req.params.username
-    res.send(`Your username ${newUsername} has been successfully updated.`)
+    let user = req.params.username;
+    Users.findOneAndUpdate(
+        {
+            Username : user
+        },
+        {
+            $set: 
+            {
+                Username: req.body.Username,
+                Password: req.body.Password,
+                Email: req.body.Email,
+                Birthday: req.body.Birthday
+            }
+        },
+        {
+            new: true
+        }
+    ).then((updatedUser) => 
+    {
+        res.json(updatedUser)
+    }).catch((err) => 
+    {
+        console.log(err);
+        res.status(500).send("Error: " + err)
+    })
+});
+
+app.put("/users/:username/movies/:movieId", (req, res) => {
+    let newFavorite = req.params.movieId;
+    let user = req.params.username;
+    Users.findOneAndUpdate({Username: user},
+    {
+        $push: {
+            FavoriteMovies : newFavorite
+        }
+    },
+    { new: true }).then((updatedFav) => {
+        res.json(updatedFav)
+    }).catch((err) => 
+    {
+        console.log(err);
+        res.status(500).send("Error: " + err)
+    })
 })
 
-app.put("/favorites/:title", (req, res) => {
-    let newFavorite = req.params.title
-    res.send(`${newFavorite} has been successfully added to your favorites.`)
-})
-
-app.delete("/favorites/:title", (req, res) => {
-    let favorite = req.params.title
-    res.send(`${favorite} has been successfully deleted from your favorites.`)
+app.delete("/users/:username/movies/:movieId", (req, res) => {
+    let favorite = req.params.movieId;
+    let user = req.params.username;
+    Users.findOneAndUpdate({Username: user}, 
+    { $pull: 
+        {
+        FavoriteMovies : favorite
+        }
+}).then((user) => 
+    {
+        if (!user) 
+        {
+            res.status(400).send(req.params.username + ' was not found');
+        } else 
+        {
+            res.status(200).send(req.params.movieId + ' was deleted.');
+        }
+    }).catch((error) => 
+    {
+        console.log(error);
+        res.status(500).send("Error: " + error)
+    })
 })
 
 app.delete("/users/:username", (req, res) => {
-    let username = req.params.username
-    res.send(`Your account ${username} has successfully been deleted`)
-})
+    let user = req.params.username;
+    Users.findOneAndDelete({Username: user}).then((user) =>
+    {
+        if (!user) 
+        {
+            res.status(400).send(req.params.username + ' was not found');
+        } else 
+        {
+            res.status(200).send(req.params.username + ' was deleted.');
+        }
+    }).catch((error) => 
+    {
+        console.log(error);
+        res.status(500).send("Error: " + error)
+    })
+});
 
 
 app.listen(8080, () => {
