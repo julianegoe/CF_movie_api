@@ -3,3 +3,4 @@ stylelint.config.js
 .vscode/
 node_modules
 img
+test.js
