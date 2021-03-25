@@ -4,11 +4,14 @@ const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const passport = require('passport');
+require('./passport');
 
 const Movies = Models.Movie;
 const Users = Models.User;
 
 mongoose.connect("mongodb://localhost:27017/myFlixDB", { useNewUrlParser: true, useUnifiedTopology: true });
+
 
 // Declare Middleware function
 let requestTime = (req, res, next) => {
@@ -28,14 +31,14 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something went wrong!');
   });
 app.use(express.static('public'));
-
+let auth = require('./auth')(app); // Why do I need to store this require function call in a variable?
 
 // HTTP requests
 app.get("/", (req, res) => {
     res.send("Welcome to myFlix API")
 });
 
-app.get("/movies", (req, res) => {
+app.get("/movies", passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
       .then((movies) => {
         res.status(201).json(movies);
@@ -46,7 +49,7 @@ app.get("/movies", (req, res) => {
       });
   });
 
-app.get("/movies/:title", (req, res) => {
+app.get("/movies/:title", passport.authenticate('jwt', { session: false }), (req, res) => {
     let reqMovie = req.params.title;
     Movies.find({Title : reqMovie}).then((movie) => 
     {
@@ -58,7 +61,7 @@ app.get("/movies/:title", (req, res) => {
     })
 });
 
-app.get("/genres/:name", (req, res) => {
+app.get("/genres/:name", passport.authenticate('jwt', { session: false }), (req, res) => {
     let genre = req.params.name;
     Movies.findOne({"Genre.Name" : genre}).then((genreName) => 
     {
@@ -70,7 +73,7 @@ app.get("/genres/:name", (req, res) => {
     })
 });
 
-app.get("/directors/:name", (req, res) => {
+app.get("/directors/:name", passport.authenticate('jwt', { session: false }), (req, res) => {
     let director = req.params.name;
     Movies.findOne({"Director.Name" : director}).then((directorName) => 
     {
@@ -93,7 +96,7 @@ app.get('/users', (req, res) => {
       });
   });
 
-  app.get('/users/:username', (req, res) => {
+  app.get('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
       let username = req.params.username;
     Users.findOne({"Username": username})
       .then((user) => {
@@ -129,7 +132,7 @@ app.post("/users", (req, res) => {
     }});
 });
 
-app.put("/users/:username", (req, res) => {
+app.put("/users/:username", passport.authenticate('jwt', { session: false }), (req, res) => {
     let user = req.params.username;
     Users.findOneAndUpdate(
         {
@@ -158,7 +161,7 @@ app.put("/users/:username", (req, res) => {
     })
 });
 
-app.put("/users/:username/movies/:movieId", (req, res) => {
+app.put("/users/:username/movies/:movieId", passport.authenticate('jwt', { session: false }), (req, res) => {
     let newFavorite = req.params.movieId;
     let user = req.params.username;
     Users.findOneAndUpdate({Username: user},
@@ -176,7 +179,7 @@ app.put("/users/:username/movies/:movieId", (req, res) => {
     })
 })
 
-app.delete("/users/:username/movies/:movieId", (req, res) => {
+app.delete("/users/:username/movies/:movieId", passport.authenticate('jwt', { session: false }), (req, res) => {
     let favorite = req.params.movieId;
     let user = req.params.username;
     Users.findOneAndUpdate({Username: user}, 
@@ -200,7 +203,7 @@ app.delete("/users/:username/movies/:movieId", (req, res) => {
     })
 })
 
-app.delete("/users/:username", (req, res) => {
+app.delete("/users/:username", passport.authenticate('jwt', { session: false }), (req, res) => {
     let user = req.params.username;
     Users.findOneAndDelete({Username: user}).then((user) =>
     {
