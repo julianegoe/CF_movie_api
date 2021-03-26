@@ -12,7 +12,9 @@ require('./passport');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect("mongodb://localhost:27017/myFlixDB", { useNewUrlParser: true, useUnifiedTopology: true });
+/* mongoose.connect("mongodb://localhost:27017/myFlixDB", { useNewUrlParser: true, useUnifiedTopology: true });
+ */
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 // Declare Middleware function
@@ -124,9 +126,9 @@ app.get("/directors/:name", passport.authenticate('jwt', { session: false }), (r
   });
 
 app.post("/users", 
-check("Username", "Username is required").isLength({min:3}),
+check("Username", "Username is required and it should be 3 characters long").isLength({min:3}),
 check("Password", "Password is required").not().isEmpty(),
-check("Birthday", "Birthday must be a date").isDate(),
+check("Birthday", "Birthday must be a date").isDate({format: "YYYY-MM-DD"}),
 check("Email", "E-Mail does not appear to be valid").isEmail(),
 (req, res) => {
     let errors = validationResult(req);
@@ -160,7 +162,7 @@ check("Email", "E-Mail does not appear to be valid").isEmail(),
 app.put("/users/:username", 
 check("Password", "Password is required").not().isEmpty(),
 passport.authenticate('jwt', { session: false }),
-check("Username", "Username is required").isLength({min:3}),
+check("Username", "Username is required and it should be 3 characters long").isLength({min:3}),
 check("Birthday", "Birthday must be a date").isDate(),
 check("Email", "E-Mail does not appear to be valid").isEmail(),
 (req, res) => {
@@ -262,3 +264,4 @@ const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
  console.log("Listening on Port  " + port);
 });
+
