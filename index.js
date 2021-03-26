@@ -36,19 +36,7 @@ app.use((err, req, res, next) => {
   });
 app.use(express.static('public'));
 let auth = require('./auth')(app);
-
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
-      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
-      return callback(new Error(message ), false);
-    }
-    return callback(null, true);
-  }
-}));
+app.use(cors())
 
 // HTTP requests
 app.get("/", (req, res) => {
@@ -126,7 +114,7 @@ app.get("/directors/:name", passport.authenticate('jwt', { session: false }), (r
   });
 
 app.post("/users", 
-check("Username", "Username is required and it should be 3 characters long").isLength({min:3}),
+check("Username", "Username is required and it should be at least 3 characters long").isLength({min:3}),
 check("Password", "Password is required").not().isEmpty(),
 check("Birthday", "Birthday must be a date").isDate({format: "YYYY-MM-DD"}),
 check("Email", "E-Mail does not appear to be valid").isEmail(),
@@ -162,7 +150,7 @@ check("Email", "E-Mail does not appear to be valid").isEmail(),
 app.put("/users/:username", 
 check("Password", "Password is required").not().isEmpty(),
 passport.authenticate('jwt', { session: false }),
-check("Username", "Username is required and it should be 3 characters long").isLength({min:3}),
+check("Username", "Username is required and it should be at least 3 characters long").isLength({min:3}),
 check("Birthday", "Birthday must be a date").isDate(),
 check("Email", "E-Mail does not appear to be valid").isEmail(),
 (req, res) => {
