@@ -5,7 +5,9 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const passport = require('passport');
-require('./passport');
+const cors = require('cors');
+const { check, validationResult } = require('express-validator');
+require('./passport'); 
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -31,7 +33,20 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something went wrong!');
   });
 app.use(express.static('public'));
-let auth = require('./auth')(app); // Why do I need to store this require function call in a variable?
+let auth = require('./auth')(app);
+
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
+      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+      return callback(new Error(message ), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 // HTTP requests
 app.get("/", (req, res) => {
@@ -108,8 +123,18 @@ app.get('/users', (req, res) => {
       });
   });
 
-app.post("/users", (req, res) => {
+app.post("/users", 
+check("Username", "Username is required").isLength({min:3}),
+check("Password", "Password is required").not().isEmpty(),
+check("Birthday", "Birthday must be a date").isDate(),
+check("Email", "E-Mail does not appear to be valid").isEmail(),
+(req, res) => {
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array()});
+    }
     let newUser = req.body;
+    let hashedPassword = Users.hashPassword(newUser.Password);
     Users.findOne({"Username" : newUser.Username}).then((user) =>
     {
         if (user) {
@@ -119,7 +144,7 @@ app.post("/users", (req, res) => {
             {
                 Name: newUser.Name,
                 Username: newUser.Username,
-                Password: newUser.Password,
+                Password: hashedPassword,
                 Email: newUser.Email,
                 Birthday: newUser.Birthday
             })
@@ -132,8 +157,19 @@ app.post("/users", (req, res) => {
     }});
 });
 
-app.put("/users/:username", passport.authenticate('jwt', { session: false }), (req, res) => {
+app.put("/users/:username", 
+check("Password", "Password is required").not().isEmpty(),
+passport.authenticate('jwt', { session: false }),
+check("Username", "Username is required").isLength({min:3}),
+check("Birthday", "Birthday must be a date").isDate(),
+check("Email", "E-Mail does not appear to be valid").isEmail(),
+(req, res) => {
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array()});
+    }
     let user = req.params.username;
+    let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOneAndUpdate(
         {
             Username : user
@@ -143,7 +179,7 @@ app.put("/users/:username", passport.authenticate('jwt', { session: false }), (r
             {
                 Name: req.body.Name,
                 Username: req.body.Username,
-                Password: req.body.Password,
+                Password: hashedPassword,
                 Email: req.body.Email,
                 Birthday: req.body.Birthday
             }
@@ -222,6 +258,7 @@ app.delete("/users/:username", passport.authenticate('jwt', { session: false }),
 });
 
 
-app.listen(8080, () => {
-    console.log("Your app is listening on port 8080.");
+const port = process.env.PORT || 8080;
+app.listen(port, "0.0.0.0",() => {
+ console.log("Listening on Port  " + port);
 });
