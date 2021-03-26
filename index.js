@@ -100,7 +100,7 @@ app.get("/directors/:name", passport.authenticate('jwt', { session: false }), (r
     })
 });
 
-app.get('/users', (req, res) => {
+/* app.get('/users', (req, res) => {
     Users.find()
       .then((users) => {
         res.status(201).json(users);
@@ -109,7 +109,7 @@ app.get('/users', (req, res) => {
         console.error(err);
         res.status(500).send('Error: ' + err);
       });
-  });
+  }); */
 
   app.get('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
       let username = req.params.username;
