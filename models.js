@@ -8,7 +8,8 @@ let movieSchema = mongoose.Schema(
    Director : {
       Name : String,
       Bio : String,
-      Birth : Date
+      Birth : Date,
+      Death : Date,
    },
    Year : Number,
    Genre : {
