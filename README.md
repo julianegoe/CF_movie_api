@@ -18,7 +18,7 @@ single movie by title to the user
 * Allow users to remove a movie from their list of favorites
 * Allow existing users to deregister
 
-Find here a [documentation of alle endpoints and examples](http://myflix-0001.herokuapp.com/documentation.html).
+Find here a [documentation of all endpoints and examples](http://myflix-0001.herokuapp.com/documentation.html).
 
 ## Tech Stack
 
@@ -27,9 +27,9 @@ bcrypt.
 
 ## Authorization
 
-All endpoints except for the POST endpoint `https://myflix-0001.herokuapp.com/users` need JWT auhorization.
+All endpoints except for the POST endpoint `https://myflix-0001.herokuapp.com/users` for registering new users need JWT auhorization.
 
-* Register a new user account 
+1.  Register a new user account by by sending a POST request with HTTP body:
 
 ```javascript
 {
@@ -42,5 +42,5 @@ All endpoints except for the POST endpoint `https://myflix-0001.herokuapp.com/us
 
 ```
 
-* Login via POST `http://myflix-0001.herokuapp.com/login?Username=<USERNAME>Password=<PASSWORD>`
-* The response object includes the bearer token (JWT token) used to authorize for all other endpoints
+2. Login via POST request `http://myflix-0001.herokuapp.com/login?Username=<USERNAME>Password=<PASSWORD>` 
+3. The response object ob the Login request includes the bearer token (JWT token) used to authorize for all other endpoints
