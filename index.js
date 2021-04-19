@@ -205,7 +205,7 @@ app.put("/users/:username/movies/:movieId", passport.authenticate('jwt', { sessi
     })
 });
 
-app.post("/movies", (req, res) => {
+app.post("/movies", passport.authenticate('jwt', { session: false }), (req, res) => {
     let title = req.body.Title;
     Movies.findOneAndUpdate({Title: title},
     {
