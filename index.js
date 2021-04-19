@@ -203,6 +203,23 @@ app.put("/users/:username/movies/:movieId", passport.authenticate('jwt', { sessi
         console.log(err);
         res.status(500).send("Error: " + err)
     })
+});
+
+app.post("/movies", (req, res) => {
+    let title = req.body.Title;
+    Movies.findOneAndUpdate({Title: title},
+    {
+        $set: {
+            ImageUrl : req.body.ImagePath
+        }
+    },
+    { new: true }).then((addedimage) => {
+        res.json(addedimage)
+    }).catch((err) => 
+    {
+        console.log(err);
+        res.status(500).send("Error: " + err)
+    })
 })
 
 app.delete("/users/:username/movies/:movieId", passport.authenticate('jwt', { session: false }), (req, res) => {
