@@ -235,15 +235,15 @@ app.post("/movies", passport.authenticate('jwt', { session: false }),
                 Title : newMovie.Title,
                 Description : newMovie.Description,
                 Director : {
-                    Name : newMovie.Name,
-                    Bio : newMovie.Bio,
-                    Birth : newMovie.Birth,
-                    Death : newMovie.Death,
+                    Name : newMovie.Director.Name,
+                    Bio : newMovie.Director.Bio,
+                    Birth : newMovie.Director.Birth,
+                    Death : newMovie.Director.Death,
                 },
                 Year : newMovie.Year,
                 Genre : {
-                    Name : newMovie.Name,
-                    Description : newMovie.Description
+                    Name : newMovie.Genre.Name,
+                    Description : newMovie.Genre.Description
                 },
                 Actors : newMovie.Actors,
                 ImageUrl : newMovie.ImageUrl,
