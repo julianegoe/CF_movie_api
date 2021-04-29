@@ -258,6 +258,24 @@ app.post("/movies", passport.authenticate('jwt', { session: false }),
     }});
 });
 
+app.delete("/movies/:title", passport.authenticate('jwt', { session: false }), (req, res) => {
+    let movie = req.params.title;
+    Movies.findOneAndDelete({Title: movie}).then((movie) =>
+    {
+        if (!movie) 
+        {
+            res.status(400).send(req.params.title + ' was not found');
+        } else 
+        {
+            res.status(200).send(req.params.title + ' was deleted.');
+        }
+    }).catch((error) => 
+    {
+        console.log(error);
+        res.status(500).send("Error: " + error)
+    })
+});
+
 
 app.delete("/users/:username/movies/:movieId", passport.authenticate('jwt', { session: false }), (req, res) => {
     let favorite = req.params.movieId;
