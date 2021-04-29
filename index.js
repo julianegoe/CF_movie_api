@@ -222,6 +222,44 @@ app.post("/movies", passport.authenticate('jwt', { session: false }), (req, res)
     })
 })
 
+app.post("/movies/:title", passport.authenticate('jwt', { session: false }),
+(req, res) => {
+    let title = req.params.title;
+    let newMovie = req.body;
+    Movies.findOne({"Title" : title}).then((movie) =>
+    {
+        if (movie) {
+            return res.status(400).send(req.body.Title + 'already exists');
+    } else {
+        Movies.create(
+            {
+                Title : newMovie.Title,
+                Description : newMovie.Description,
+                Director : {
+                    Name : newMovie.Name,
+                    Bio : newMovie.Bio,
+                    Birth : newMovie.Birth,
+                    Death : newMovie.Death,
+                },
+                Year : newMovie.Year,
+                Genre : {
+                    Name : newMovie.Name,
+                    Description : newMovie.Description
+                },
+                Actors : [newMovie.Actors],
+                ImageUrl : newMovie.ImageUrl,
+                Featured : newMovie.Featured
+                            })
+            .then((movie) => {
+                res.status(201).json(movie)
+            }).catch((error) => {
+                console.error(error);
+                res.status(500).send('Error: ' + error);
+            });
+    }});
+});
+
+
 app.delete("/users/:username/movies/:movieId", passport.authenticate('jwt', { session: false }), (req, res) => {
     let favorite = req.params.movieId;
     let user = req.params.username;
