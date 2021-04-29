@@ -205,7 +205,7 @@ app.put("/users/:username/movies/:movieId", passport.authenticate('jwt', { sessi
     })
 });
 
-app.post("/movies", passport.authenticate('jwt', { session: false }), (req, res) => {
+/* app.post("/movies", passport.authenticate('jwt', { session: false }), (req, res) => {
     let title = req.body.Title;
     Movies.findOneAndUpdate({Title: title},
     {
@@ -220,7 +220,7 @@ app.post("/movies", passport.authenticate('jwt', { session: false }), (req, res)
         console.log(err);
         res.status(500).send("Error: " + err)
     })
-})
+}) */
 
 app.post("/movies", passport.authenticate('jwt', { session: false }),
 (req, res) => {
@@ -228,7 +228,7 @@ app.post("/movies", passport.authenticate('jwt', { session: false }),
     Movies.findOne({"Title" : newMovie.Title}).then((movie) =>
     {
         if (movie) {
-            return res.status(400).send(title + 'already exists');
+            return res.status(400).send(newMovie.Title + 'already exists');
     } else {
         Movies.create(
             {
