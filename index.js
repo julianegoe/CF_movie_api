@@ -245,7 +245,7 @@ app.post("/movies", passport.authenticate('jwt', { session: false }),
                     Name : newMovie.Name,
                     Description : newMovie.Description
                 },
-                Actors : [newMovie.Actors],
+                Actors : newMovie.Actors,
                 ImageUrl : newMovie.ImageUrl,
                 Featured : newMovie.Featured
                             })
