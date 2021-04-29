@@ -222,14 +222,13 @@ app.post("/movies", passport.authenticate('jwt', { session: false }), (req, res)
     })
 })
 
-app.post("/movies/:title", passport.authenticate('jwt', { session: false }),
+app.post("/movies", passport.authenticate('jwt', { session: false }),
 (req, res) => {
-    let title = req.params.title;
     let newMovie = req.body;
-    Movies.findOne({"Title" : title}).then((movie) =>
+    Movies.findOne({"Title" : newMovie.Title}).then((movie) =>
     {
         if (movie) {
-            return res.status(400).send(req.body.Title + 'already exists');
+            return res.status(400).send(title + 'already exists');
     } else {
         Movies.create(
             {
