@@ -55,6 +55,7 @@ app.get("/", (req, res) => {
     res.send("Welcome to myFlix API")
 });
 
+/* Get JSON of All movies */
 app.get("/movies", passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
       .then((movies) => {
@@ -66,6 +67,7 @@ app.get("/movies", passport.authenticate('jwt', { session: false }), (req, res) 
       });
   });
 
+/* Get JSON of one move by title */
 app.get("/movies/:title", passport.authenticate('jwt', { session: false }), (req, res) => {
     let reqMovie = req.params.title;
     Movies.find({Title : reqMovie}).then((movie) => 
@@ -78,6 +80,7 @@ app.get("/movies/:title", passport.authenticate('jwt', { session: false }), (req
     })
 });
 
+/* Get info on a genre by name */
 app.get("/genres/:name", passport.authenticate('jwt', { session: false }), (req, res) => {
     let genre = req.params.name;
     Movies.findOne({"Genre.Name" : genre}).then((genreName) => 
@@ -90,6 +93,7 @@ app.get("/genres/:name", passport.authenticate('jwt', { session: false }), (req,
     })
 });
 
+/* get info on director by name */
 app.get("/directors/:name", passport.authenticate('jwt', { session: false }), (req, res) => {
     let director = req.params.name;
     Movies.findOne({"Director.Name" : director}).then((directorName) => 
@@ -102,6 +106,7 @@ app.get("/directors/:name", passport.authenticate('jwt', { session: false }), (r
     })
 });
 
+/* get JSON of all users */
 app.get('/users', (req, res) => {
     Users.find()
       .then((users) => {
@@ -113,6 +118,7 @@ app.get('/users', (req, res) => {
       });
   });
 
+/* get JSON of one user by username */
   app.get('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
       let username = req.params.username;
     Users.findOne({"Username": username})
