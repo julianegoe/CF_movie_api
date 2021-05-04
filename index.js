@@ -286,7 +286,7 @@ app.delete("/users/:username/movies/:movieId", passport.authenticate('jwt', { se
             res.status(400).send(req.params.username + ' was not found');
         } else 
         {
-            res.status(200).send(req.params.movieId + ' was deleted.');
+            res.status(200).json(user)
         }
     }).catch((error) => 
     {
