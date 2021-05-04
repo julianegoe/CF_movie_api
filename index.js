@@ -279,14 +279,14 @@ app.delete("/users/:username/movies/:movieId", passport.authenticate('jwt', { se
         {
         FavoriteMovies : favorite
         }
-}).then((user) => 
+}, {new : true}).then((updatedUser) => 
     {
         if (!user) 
         {
             res.status(400).send(req.params.username + ' was not found');
         } else 
         {
-            res.status(200).json(user)
+            res.status(200).json(updatedUser)
         }
     }).catch((error) => 
     {
