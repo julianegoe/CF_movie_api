@@ -121,6 +121,7 @@ app.get('/users', (req, res) => {
       });
   });
 
+  /* register new user */
 app.post("/users", 
 check("Username", "Username is required and it should be at least 3 characters long").isLength({min:3}),
 check("Password", "Password is required").not().isEmpty(),
@@ -155,6 +156,7 @@ check("Email", "E-Mail does not appear to be valid").isEmail(),
     }});
 });
 
+/* update user info */
 app.put("/users/:username", 
 check("Password", "Password is required").not().isEmpty(),
 passport.authenticate('jwt', { session: false }),
@@ -195,6 +197,7 @@ check("Email", "E-Mail does not appear to be valid").isEmail(),
     })
 });
 
+/* add favorites */
 app.put("/users/:username/movies/:movieId", passport.authenticate('jwt', { session: false }), (req, res) => {
     let newFavorite = req.params.movieId;
     let user = req.params.username;
@@ -212,23 +215,6 @@ app.put("/users/:username/movies/:movieId", passport.authenticate('jwt', { sessi
         res.status(500).send("Error: " + err)
     })
 });
-
-/* app.post("/movies", passport.authenticate('jwt', { session: false }), (req, res) => {
-    let title = req.body.Title;
-    Movies.findOneAndUpdate({Title: title},
-    {
-        $set: {
-            ImageUrl : req.body.ImagePath
-        }
-    },
-    { new: true }).then((addedimage) => {
-        res.json(addedimage)
-    }).catch((err) => 
-    {
-        console.log(err);
-        res.status(500).send("Error: " + err)
-    })
-}) */
 
 app.post("/movies", passport.authenticate('jwt', { session: false }),
 (req, res) => {
