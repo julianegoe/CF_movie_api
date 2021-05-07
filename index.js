@@ -125,7 +125,7 @@ app.get('/users', (req, res) => {
 app.post("/users", 
 check("Username", "Username is required and it should be at least 3 characters long").isLength({min:3}),
 check("Password", "Password is required").not().isEmpty(),
-check("Birthday", "Birthday must be a date").isDate({format: "YYYY-MM-DD"}),
+check("Birthday", "Birthday must be a date").isDate(),
 check("Email", "E-Mail does not appear to be valid").isEmail(),
 (req, res) => {
     let errors = validationResult(req);
