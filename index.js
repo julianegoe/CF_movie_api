@@ -1,11 +1,11 @@
 const express = require("express");
 const Models = require("./models.js");
 const app = express();
+const cors = require('cors')
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const passport = require('passport');
-const cors = require('cors');
 const { check, validationResult } = require('express-validator');
 require('./passport'); 
 
@@ -17,18 +17,10 @@ const Users = Models.User;
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
-// Declare Middleware function
-let requestTime = (req, res, next) => {
-    let timeNow = new Date(Date.now());
-    req.requestTime = timeNow.toUTCString();
-    console.log(req.requestTime);
-    next();
-};
-
 
 // Execute Middleware functions
+app.options('*', cors()) 
 app.use(morgan("common"));
-/* app.use(requestTime); */
 app.use(bodyParser.json());
 app.use((err, req, res, next) => {
     console.error(err.stack);
@@ -37,12 +29,6 @@ app.use((err, req, res, next) => {
 app.use(express.static('public'));
 let auth = require('./auth')(app);
 
-
-var corsOptions = {
-    origin: '*',
-    optionsSuccessStatus: 200,
-  }
-app.use(cors(corsOptions));
 
 // HTTP requests
 app.get("/", (req, res) => {
