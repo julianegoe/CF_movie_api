@@ -38,7 +38,11 @@ app.use(express.static('public'));
 let auth = require('./auth')(app);
 
 
-app.use(cors())
+var corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200,
+  }
+app.use(cors(corsOptions));
 
 // HTTP requests
 app.get("/", (req, res) => {
