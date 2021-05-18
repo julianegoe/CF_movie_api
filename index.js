@@ -12,6 +12,8 @@ require('./passport');
 const Movies = Models.Movie;
 const Users = Models.User;
 
+
+app.options('*', cors()) 
 /* mongoose.connect("mongodb://localhost:27017/myFlixDB", { useNewUrlParser: true, useUnifiedTopology: true });
  */
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -19,14 +21,17 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 
 
 // Execute Middleware functions
-app.options('*', cors()) 
+
 app.use(morgan("common"));
+app.use(express.static('public'));
 app.use(bodyParser.json());
+
+// default error handling
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something went wrong!');
   });
-app.use(express.static('public'));
+
 let auth = require('./auth')(app);
 
 
