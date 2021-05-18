@@ -38,13 +38,10 @@ app.use(express.static('public'));
 let auth = require('./auth')(app);
 
 
-app.use(cors({
-    origin: 'https://gallant-lichterman-3cc706.netlify.app/'
-  }));
+app.use(cors())
 
 // HTTP requests
 app.get("/", (req, res) => {
-    res.header("Access-Control-Allow-Origin", "*");
     res.send("Welcome to myFlix API")
 });
 
@@ -52,7 +49,6 @@ app.get("/", (req, res) => {
 app.get("/movies", passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
       .then((movies) => {
-        res.header("Access-Control-Allow-Origin", "*");
         res.status(201).json(movies);
       })
       .catch((err) => {
@@ -65,7 +61,7 @@ app.get("/movies", passport.authenticate('jwt', { session: false }), (req, res) 
 app.get("/movies/:title", passport.authenticate('jwt', { session: false }), (req, res) => {
     let reqMovie = req.params.title;
     Movies.find({Title : reqMovie}).then((movie) => 
-    {   res.header("Access-Control-Allow-Origin", "*");
+    {
         res.status(202).json(movie)
     }).catch((error) => 
     {
@@ -78,7 +74,7 @@ app.get("/movies/:title", passport.authenticate('jwt', { session: false }), (req
 app.get("/genres/:name", passport.authenticate('jwt', { session: false }), (req, res) => {
     let genre = req.params.name;
     Movies.findOne({"Genre.Name" : genre}).then((genreName) => 
-    {   res.header("Access-Control-Allow-Origin", "*");
+    {
         res.status(202).json(genreName.Genre)
     }).catch((error) => 
     {
@@ -91,7 +87,7 @@ app.get("/genres/:name", passport.authenticate('jwt', { session: false }), (req,
 app.get("/directors/:name", passport.authenticate('jwt', { session: false }), (req, res) => {
     let director = req.params.name;
     Movies.findOne({"Director.Name" : director}).then((directorName) => 
-    {   res.header("Access-Control-Allow-Origin", "*");
+    {
         res.status(202).json(directorName.Director)
     }).catch((error) => 
     {
@@ -104,7 +100,6 @@ app.get("/directors/:name", passport.authenticate('jwt', { session: false }), (r
 app.get('/users', (req, res) => {
     Users.find()
       .then((users) => {
-        res.header("Access-Control-Allow-Origin", "*");
         res.status(201).json(users);
       })
       .catch((err) => {
@@ -118,7 +113,6 @@ app.get('/users', (req, res) => {
       let username = req.params.username;
     Users.findOne({"Username": username})
       .then((user) => {
-        res.header("Access-Control-Allow-Origin", "*");
         res.status(201).json(user);
       })
       .catch((err) => {
@@ -153,7 +147,6 @@ check("Email", "E-Mail does not appear to be valid").isEmail(),
                 Birthday: newUser.Birthday
             })
             .then((user) => {
-                res.header("Access-Control-Allow-Origin", "*");
                 res.status(201).json(user)
             }).catch((error) => {
                 console.error(error);
@@ -194,7 +187,7 @@ check("Email", "E-Mail does not appear to be valid").isEmail(),
             new: true
         }
     ).then((updatedUser) => 
-    {   res.header("Access-Control-Allow-Origin", "*");
+    {
         res.json(updatedUser)
     }).catch((err) => 
     {
@@ -214,7 +207,6 @@ app.put("/users/:username/movies/:movieId", passport.authenticate('jwt', { sessi
         }
     },
     { new: true }).then((updatedFav) => {
-        res.header("Access-Control-Allow-Origin", "*");
         res.json(updatedFav)
     }).catch((err) => 
     {
@@ -251,7 +243,6 @@ app.post("/movies", passport.authenticate('jwt', { session: false }),
                 Featured : newMovie.Featured
                             })
             .then((movie) => {
-                res.header("Access-Control-Allow-Origin", "*");
                 res.status(201).json(movie)
             }).catch((error) => {
                 console.error(error);
@@ -268,7 +259,7 @@ app.delete("/movies/:title", passport.authenticate('jwt', { session: false }), (
         {
             res.status(400).send(req.params.title + ' was not found');
         } else 
-        {   res.header("Access-Control-Allow-Origin", "*");
+        {
             res.status(200).send(req.params.title + ' was deleted.');
         }
     }).catch((error) => 
@@ -293,7 +284,7 @@ app.delete("/users/:username/movies/:movieId", passport.authenticate('jwt', { se
         {
             res.status(400).send(req.params.username + ' was not found');
         } else 
-        {   res.header("Access-Control-Allow-Origin", "*");
+        {
             res.status(200).json(updatedUser)
         }
     }).catch((error) => 
@@ -311,7 +302,7 @@ app.delete("/users/:username", passport.authenticate('jwt', { session: false }),
         {
             res.status(400).send(req.params.username + ' was not found');
         } else 
-        {   res.header("Access-Control-Allow-Origin", "*");
+        {
             res.status(200).send(req.params.username + ' was deleted.');
         }
     }).catch((error) => 
