@@ -38,7 +38,9 @@ app.use(express.static('public'));
 let auth = require('./auth')(app);
 
 
-app.options('*', cors()) 
+app.use(cors({
+    origin: 'https://gallant-lichterman-3cc706.netlify.app/'
+  }));
 
 // HTTP requests
 app.get("/", (req, res) => {
